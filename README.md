@@ -1,11 +1,11 @@
-# Local and Global Recursive Ridge Regression for Online Residual Correction
+# DRiC: DCT Ridge Corrector
 
 Reference implementation and numerical records for *Local and Global Recursive Ridge Regression for Online Residual Correction of Frozen Multivariate Forecasters under Label Delay* (T. Fujimoto and H. Nishi, 2026).
 
-A frozen multi-horizon forecaster is corrected online from its own residuals. Each block of `H` steps, the corrector predicts the leading DCT coefficients of the next residual block from the leading DCT coefficients of the frozen forecast and of the latest input block. The prediction uses an exponentially weighted ridge regression whose sufficient statistics are updated only after the block's target is complete (label delay equal to the horizon).
+DRiC (DCT Ridge Corrector) corrects a frozen multi-horizon forecaster online from its own residuals. Each block of `H` steps, the corrector predicts the leading DCT coefficients of the next residual block from the leading DCT coefficients of the frozen forecast and of the latest input block. The prediction uses an exponentially weighted ridge regression whose sufficient statistics are updated only after the block's target is complete (label delay equal to the horizon).
 
-- **Local corrector:** one regression per channel.
-- **Global corrector:** one regression shared by all channels; its regression statistics do not depend on the channel count (only the guard keeps one scale, 8 bytes, per channel).
+- **DRiC-L (local):** one regression per channel; DRiC-L4 and DRiC-L8 use $K=4$ and $K=8$ coefficients (`local4`, `local8` in the records).
+- **DRiC-G (global, `global` in the records):** one regression shared by all channels; its regression statistics do not depend on the channel count (only the guard keeps one scale, 8 bytes, per channel).
 - **Guard:** keeps a running scale of each channel's residual. Blocks far outside that scale are left out of the update, and the issued correction is clipped by the same scale.
 
 ## Install and test
