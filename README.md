@@ -1,6 +1,6 @@
-# Local and Global Recursive Ridge Correction
+# Local and Global Recursive Ridge Regression for Online Residual Correction
 
-Reference implementation and numerical records for *Local and Global Recursive Ridge Correction of Frozen Multivariate Forecasters under Label Delay* (T. Fujimoto and H. Nishi, 2026).
+Reference implementation and numerical records for *Local and Global Recursive Ridge Regression for Online Residual Correction of Frozen Multivariate Forecasters under Label Delay* (T. Fujimoto and H. Nishi, 2026).
 
 A frozen multi-horizon forecaster is corrected online from its own residuals. Each block of `H` steps, the corrector predicts the leading DCT coefficients of the next residual block from the leading DCT coefficients of the frozen forecast and of the latest input block. The prediction uses an exponentially weighted ridge regression whose sufficient statistics are updated only after the block's target is complete (label delay equal to the horizon).
 
