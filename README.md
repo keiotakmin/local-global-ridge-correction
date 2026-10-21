@@ -5,7 +5,7 @@ Reference implementation and numerical records for *Local and Global Recursive R
 A frozen multi-horizon forecaster is corrected online from its own residuals. Each block of `H` steps, the corrector predicts the leading DCT coefficients of the next residual block from the leading DCT coefficients of the frozen forecast and of the latest input block. The prediction uses an exponentially weighted ridge regression whose sufficient statistics are updated only after the block's target is complete (label delay equal to the horizon).
 
 - **Local corrector:** one regression per channel.
-- **Global corrector:** one regression shared by all channels; its learned state does not depend on the channel count.
+- **Global corrector:** one regression shared by all channels; its regression statistics do not depend on the channel count (only the guard keeps one scale, 8 bytes, per channel).
 - **Guard:** keeps a running scale of each channel's residual. Blocks far outside that scale are left out of the update, and the issued correction is clipped by the same scale.
 
 ## Install and test
@@ -17,7 +17,7 @@ python -m venv .venv
 .venv/bin/python reproduce.py
 ```
 
-`reproduce.py` recomputes the paper's summary table (mean MSE reductions, retained state, paired wins against ELF) from the condition-level records and checks it against `records/summary.csv`.
+`reproduce.py` recomputes the paper's summary table (mean, panel-weighted mean and median MSE reductions, retained state, paired wins against ELF) from the condition-level records and checks it against `records/summary.csv`.
 
 ## Correct your own forecasts
 

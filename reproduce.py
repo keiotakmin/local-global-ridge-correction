@@ -4,7 +4,8 @@
 
 Main view: the 126 conditions of the seven datasets with the filled Weather file (table == 'filled'); the standard
 Weather file (table == 'standard', dataset == 'weather') is reported separately. Retained state is the largest
-value over the three backbones.
+value over the three backbones. mean_panels weights the 12 dataset-backbone panels equally (the four ETT series
+form one dataset); median_126 is the median over the 126 conditions.
 """
 from pathlib import Path
 
@@ -21,8 +22,11 @@ def main():
     rows['scope'] = np.where(rows.dataset.isin(ETT), 'ETT', rows.dataset)
     main = rows[rows.main]
     assert main.groupby('method').size().eq(126).all()
+    panels = main.groupby(['method', 'scope', 'backbone']).mse_reduction_pct.mean()
     out = pd.DataFrame({
         'mean_126': main.groupby('method').mse_reduction_pct.mean(),
+        'mean_panels': panels.groupby('method').mean(),
+        'median_126': main.groupby('method').mse_reduction_pct.median(),
         **{s: main[main.scope.eq(s)].groupby('method').mse_reduction_pct.mean()
            for s in ('ETT', 'weather', 'electricity', 'traffic')},
         'weather_standard': rows[rows.table.eq('standard') & rows.dataset.eq('weather')]
